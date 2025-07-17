@@ -15,7 +15,7 @@ JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
 # Replace these with actual UID/PASSWORD per region
 CREDENTIALS = {
-    "IND": {
+    "END": {
         "uid": "3959793024",
         "password": "CD265B729E2C2FA1882AD14579BA602738670D69B4438C127C31AE08FB9D7C17",
         "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName"
