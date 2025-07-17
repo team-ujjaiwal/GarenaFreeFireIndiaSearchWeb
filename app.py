@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify
 import requests
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
-from freefire_pb2 import Players
+from data_pb2 import AccountPersonalShowInfo
 import urllib3
 import datetime
+import json
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -13,104 +14,94 @@ app = Flask(__name__)
 # JWT generate URL
 JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
-# Region credentials with unique keys
+# Replace these with actual UID/PASSWORD per region
 CREDENTIALS = {
     "IND": {
         "uid": "3959793024",
         "password": "CD265B729E2C2FA1882AD14579BA602738670D69B4438C127C31AE08FB9D7C17",
-        "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName",
-        "server_code": "IND"
+        "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName"
     },
     "SG": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "SG"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "NA": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
-        "server_code": "NA"
+        "url": "https://client.br.freefiremobile.com/FuzzySearchAccountByName"
     },
     "BR": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
-        "server_code": "BR"
-    },
+        "url": "https://client.na.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
     "SAC": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
-        "server_code": "SAC"
-    },
+        "url": "https://client.na.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
     "US": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
-        "server_code": "US"
-    },
+        "url": "https://client.na.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
     "ID": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "ID"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "TW": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "TW"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "TH": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "TH"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "BR": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "BD": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "BD"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "ME": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "ME"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "RU": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "RU"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "VN": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "VN"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "PK": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "PK"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
     "CIS": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "CIS"
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
     },
-    "EUROPE": {
+    "EROUPE": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
-        "server_code": "EUROPE"
-    }
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    # Add more servers as needed
 }
 
 def get_jwt(uid, password):
@@ -140,19 +131,113 @@ def convert_timestamp(ts):
     except Exception:
         return str(ts)
 
-def format_player(player, requested_region):
-    return {
-        "account_id": player.accountId,
-        "nickname": player.nickname,
-        "region": requested_region,  # Use the requested region instead of player.region
-        "level": player.level,
-        "last_login": convert_timestamp(player.lastLogin)
+def format_player_response(player_info):
+    """Format the AccountPersonalShowInfo protobuf into the desired JSON structure"""
+    response = {
+        "basicInfo": {
+            "accountId": str(player_info.basic_info.account_id),
+            "accountType": player_info.basic_info.account_type,
+            "badgeCnt": player_info.basic_info.badge_cnt,
+            "badgeId": player_info.basic_info.badge_id,
+            "bannerId": str(player_info.basic_info.banner_id),
+            "createAt": player_info.basic_info.create_at,
+            "csMaxRank": player_info.basic_info.cs_max_rank,
+            "csRank": player_info.basic_info.cs_rank,
+            "csRankingPoints": player_info.basic_info.cs_ranking_points,
+            "exp": str(player_info.basic_info.exp),
+            "externalIconInfo": {
+                "showType": player_info.basic_info.external_icon_info.show_type,
+                "status": player_info.basic_info.external_icon_info.status
+            },
+            "hasElitePass": player_info.basic_info.has_elite_pass,
+            "headPic": str(player_info.basic_info.head_pic),
+            "lastLoginAt": convert_timestamp(player_info.basic_info.last_login_at),
+            "level": player_info.basic_info.level,
+            "liked": player_info.basic_info.liked,
+            "maxRank": player_info.basic_info.max_rank,
+            "nickname": player_info.basic_info.nickname,
+            "rank": player_info.basic_info.rank,
+            "rankingPoints": player_info.basic_info.ranking_points,
+            "region": player_info.basic_info.region,
+            "releaseVersion": player_info.basic_info.release_version,
+            "seasonId": player_info.basic_info.season_id,
+            "showBrRank": player_info.basic_info.show_br_rank,
+            "showCsRank": player_info.basic_info.show_cs_rank,
+            "showRank": player_info.basic_info.show_rank,
+            "title": player_info.basic_info.title,
+            "weaponSkinShows": list(player_info.basic_info.weapon_skin_shows)
+        },
+        "captainBasicInfo": {
+            "accountId": str(player_info.captain_basic_info.account_id),
+            "accountType": player_info.captain_basic_info.account_type,
+            "badgeCnt": player_info.captain_basic_info.badge_cnt,
+            "badgeId": player_info.captain_basic_info.badge_id,
+            "bannerId": str(player_info.captain_basic_info.banner_id),
+            "createAt": player_info.captain_basic_info.create_at,
+            "csMaxRank": player_info.captain_basic_info.cs_max_rank,
+            "csRank": player_info.captain_basic_info.cs_rank,
+            "csRankingPoints": player_info.captain_basic_info.cs_ranking_points,
+            "exp": str(player_info.captain_basic_info.exp),
+            "externalIconInfo": {
+                "showType": player_info.captain_basic_info.external_icon_info.show_type,
+                "status": player_info.captain_basic_info.external_icon_info.status
+            },
+            "hasElitePass": player_info.captain_basic_info.has_elite_pass,
+            "headPic": str(player_info.captain_basic_info.head_pic),
+            "lastLoginAt": convert_timestamp(player_info.captain_basic_info.last_login_at),
+            "level": player_info.captain_basic_info.level,
+            "liked": player_info.captain_basic_info.liked,
+            "maxRank": player_info.captain_basic_info.max_rank,
+            "nickname": player_info.captain_basic_info.nickname,
+            "rank": player_info.captain_basic_info.rank,
+            "rankingPoints": player_info.captain_basic_info.ranking_points,
+            "region": player_info.captain_basic_info.region,
+            "releaseVersion": player_info.captain_basic_info.release_version,
+            "seasonId": player_info.captain_basic_info.season_id,
+            "showBrRank": player_info.captain_basic_info.show_br_rank,
+            "showCsRank": player_info.captain_basic_info.show_cs_rank,
+            "showRank": player_info.captain_basic_info.show_rank,
+            "title": player_info.captain_basic_info.title,
+            "weaponSkinShows": list(player_info.captain_basic_info.weapon_skin_shows)
+        },
+        "clanBasicInfo": {
+            "capacity": player_info.clan_basic_info.max_members,
+            "captainId": str(player_info.clan_basic_info.captain_id),
+            "clanId": str(player_info.clan_basic_info.clan_id),
+            "clanLevel": player_info.clan_basic_info.clan_level,
+            "clanName": player_info.clan_basic_info.clan_name,
+            "memberNum": player_info.clan_basic_info.current_members
+        },
+        "diamondCostRes": {
+            "diamondCost": player_info.diamond_cost_res.diamond_cost if player_info.HasField("diamond_cost_res") else 0
+        },
+        "petInfo": {
+            "exp": player_info.pet_info.exp if player_info.HasField("pet_info") else 0,
+            "id": player_info.pet_info.pet_id if player_info.HasField("pet_info") else 0,
+            "isSelected": player_info.pet_info.is_selected if player_info.HasField("pet_info") else False,
+            "level": player_info.pet_info.level if player_info.HasField("pet_info") else 0,
+            "name": player_info.pet_info.pet_name if player_info.HasField("pet_info") else "",
+            "selectedSkillId": player_info.pet_info.selected_skill_id if player_info.HasField("pet_info") else 0,
+            "skinId": player_info.pet_info.skin_id if player_info.HasField("pet_info") else 0
+        },
+        "profileInfo": {
+            "avatarId": player_info.profile_info.avatar_id,
+            "equipedSkills": list(player_info.profile_info.equipped_skills),
+            "pvePrimaryWeapon": player_info.profile_info.pve_primary_weapon
+        },
+        "socialInfo": {
+            "accountId": str(player_info.social_info.account_id),
+            "gender": "Gender_MALE" if player_info.social_info.gender == 2 else "Gender_FEMALE" if player_info.social_info.gender == 1 else "Gender_UNKNOWN",
+            "language": "Language_ARABIC"  # You'll need to map the language enum values
+        }
     }
+    
+    return response
 
 @app.route('/search', methods=['GET'])
 def search_by_name():
     name = request.args.get('nickname')
-    region = request.args.get('region', 'IND').upper()
+    region = request.args.get('region', 'ind').upper()
 
     if not name:
         return jsonify({"error": "Missing 'nickname' parameter"}), 400
@@ -185,23 +270,19 @@ def search_by_name():
         return jsonify({"error": f"Request error: {str(e)}"}), 500
 
     if response.status_code == 200 and response.content:
-        players = Players()
-        players.ParseFromString(response.content)
-
-        # Filter players by the requested region (server_code)
-        filtered_players = [
-            p for p in players.player 
-            if p.region.upper() == creds["server_code"]
-        ]
-
-        results = [format_player(p, region) for p in filtered_players]
-
-        return jsonify({
-            "region": region,
-            "requested_name": name,
-            "results": results
-        })
-
+        try:
+            player_info = AccountPersonalShowInfo()
+            player_info.ParseFromString(response.content)
+            
+            formatted_response = format_player_response(player_info)
+            
+            return jsonify({
+                "region": region.upper(),
+                "requested_name": name,
+                "result": formatted_response
+            })
+        except Exception as e:
+            return jsonify({"error": f"Failed to parse response: {str(e)}"}), 500
     else:
         return jsonify({"error": "Failed to fetch data or empty response"}), 500
 
