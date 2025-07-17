@@ -142,7 +142,7 @@ def format_player(player):
 @app.route('/search', methods=['GET'])
 def search_by_name():
     name = request.args.get('nickname')
-    region = request.args.get('region', 'ind').lower()
+    region = request.args.get('region', 'ind').upper()  # FIXED here 👈
 
     if not name:
         return jsonify({"error": "Missing 'nickname' parameter"}), 400
