@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
-from freefire_pb2 import Players  # Make sure your compiled freefire_pb2.py is here
+from freefire_pb2 import Players
 import urllib3
 import datetime
 
@@ -10,15 +10,98 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 
-# Credentials for IND
-UID = "3959794891"
-PASSWORD = "CBECEA7B0F13FD5A4A9075F5831089C286FD5CC791BE9A00EF734CEBC20AC756"
-
 # JWT generate URL
-JWT_URL = "https://aditya-jwt-v9op.onrender.com/token"
+JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
-# SEARCH URL for IND
-SEARCH_URL = "https://client.ind.freefiremobile.com/FuzzySearchAccountByName"
+# Replace these with actual UID/PASSWORD per region
+CREDENTIALS = {
+    "IND": {
+        "uid": "3959793024",
+        "password": "CD265B729E2C2FA1882AD14579BA602738670D69B4438C127C31AE08FB9D7C17",
+        "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "SG": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "NA": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.br.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "BR": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.na.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
+    "SAC": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.na.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
+    "US": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.na.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
+    "ID": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "TW": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "TH": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "BR": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "BD": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "ME": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "RU": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "VN": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "PK": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "CIS": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "EROUPE": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://client.sg.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    # Add more servers as needed
+}
 
 def get_jwt(uid, password):
     try:
@@ -26,7 +109,7 @@ def get_jwt(uid, password):
         response = requests.get(JWT_URL, params=params)
         if response.status_code == 200:
             jwt_data = response.json()
-            return jwt_data.get("token")  
+            return jwt_data.get("token")
         return None
     except Exception as e:
         print(f"Error fetching JWT: {e}")
@@ -59,11 +142,16 @@ def format_player(player):
 @app.route('/search', methods=['GET'])
 def search_by_name():
     name = request.args.get('nickname')
+    region = request.args.get('region', 'ind').lower()
 
     if not name:
-        return jsonify({"error": "Missing 'name' parameter"}), 400
+        return jsonify({"error": "Missing 'nickname' parameter"}), 400
 
-    jwt_token = get_jwt(UID, PASSWORD)
+    creds = CREDENTIALS.get(region)
+    if not creds:
+        return jsonify({"error": f"Unsupported region '{region}'"}), 400
+
+    jwt_token = get_jwt(creds["uid"], creds["password"])
     if not jwt_token:
         return jsonify({"error": "Failed to generate JWT"}), 500
 
@@ -76,13 +164,13 @@ def search_by_name():
         'X-GA': 'v1 1',
         'Authorization': f'Bearer {jwt_token}',
         'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 7.1.2; ASUS_Z01QD Build/QKQ1.190825.002)',
-        'Host': SEARCH_URL.split("//")[1].split("/")[0],
+        'Host': creds["url"].split("//")[1].split("/")[0],
         'Connection': 'Keep-Alive',
         'Accept-Encoding': 'gzip'
     }
 
     try:
-        response = requests.post(SEARCH_URL, headers=headers, data=bytes.fromhex(encrypted_data), verify=False)
+        response = requests.post(creds["url"], headers=headers, data=bytes.fromhex(encrypted_data), verify=False)
     except Exception as e:
         return jsonify({"error": f"Request error: {str(e)}"}), 500
 
@@ -90,14 +178,11 @@ def search_by_name():
         players = Players()
         players.ParseFromString(response.content)
 
-        results = []
-        for p in players.player:
-            results.append(format_player(p))
+        results = [format_player(p) for p in players.player]
 
         return jsonify({
-            "region": "IND",
+            "region": region.upper(),
             "requested_name": name,
-            "Credit": "@Ujjaiwal",  # Added Credit field here
             "results": results
         })
 
