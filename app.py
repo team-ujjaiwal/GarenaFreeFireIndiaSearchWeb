@@ -25,7 +25,7 @@ CREDENTIALS = {
     "NA": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
+        "url": " https://client.us.freefiremobile.com/FuzzySearchAccountByName"
     },
     "BR": {
         "uid": "3943737998",
@@ -53,6 +53,11 @@ CREDENTIALS = {
         "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
     },
     "TH": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "BR": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
         "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
@@ -91,14 +96,15 @@ CREDENTIALS = {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
         "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
-    }
+    },
+    # Add more servers as needed
 }
 
 # JWT generate URL
 JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
 # API Key
-API_KEY = "unbelievablekeysforujjaiwal"
+API_KEY = "3weekstrylekeysforujjaiwal&darkbhaifan"
 
 def get_jwt(uid, password):
     try:
@@ -138,8 +144,6 @@ def format_player(player):
         "badgeId": player.title_id,
         "currentRank": player.current_rank,
         "countryCode": player.country_code,
-        "clanId": str(player.clan_id),
-        "clanTag": player.clan_tag,
         "matchesPlayed": player.matches_played,
         "kills": player.kills,
         "dailyChallenges": player.daily_challenges,
@@ -152,28 +156,19 @@ def format_player(player):
         "emailVerified": player.email_verified,
         "phoneVerified": player.phone_verified,
         "gameVersion": player.game_version,
-        "headshotPercentage": player.headshot_percentage,
-        "encryptedStats": player.encrypted_stats.hex() if player.encrypted_stats else None
+        "headshotPercentage": player.headshot_percentage
     }
 
-    # Add subscription info if available
     if player.HasField('subscription'):
         player_info["subscription"] = {
             "tier": player.subscription.tier,
             "renewalPeriod": player.subscription.renewal_period
         }
 
-    return player_info
+    if player.encrypted_stats:
+        player_info["encryptedStats"] = player.encrypted_stats.hex()
 
-def format_clan(clan):
-    return {
-        "clanId": clan.clan_id,
-        "memberCount": clan.member_count,
-        "clanLogo": clan.clan_logo.hex() if clan.clan_logo else None,
-        "status": clan.status,
-        "permissionLevel": clan.permission_level,
-        "creationDate": convert_timestamp(clan.creation_date)
-    }
+    return player_info
 
 @app.route('/search', methods=['GET'])
 def search_by_name():
@@ -187,7 +182,6 @@ def search_by_name():
     if key != API_KEY:
         return jsonify({"error": "Invalid API key"}), 401
 
-    # Get credentials for the specified region
     creds = CREDENTIALS.get(region)
     if not creds:
         return jsonify({"error": f"Unsupported region '{region}'"}), 400
@@ -219,35 +213,16 @@ def search_by_name():
         player_data = GetPlayerPersonalShow()
         player_data.ParseFromString(response.content)
 
+        # Build response with only players
         result = {
             "Credit": "@Ujjaiwal",
-            "region": region,
-            "players": [],
-            "clans": [],
-            "detailedPlayer": None,
-            "currencies": []
+            "developer": "@DarkBhaiFan",
+            "players": [format_player(player) for player in player_data.players]
         }
 
-        # Format players
-        for player in player_data.players:
-            result["players"].append(format_player(player))
-
-        # Format clans
-        for clan in player_data.clans:
-            result["clans"].append(format_clan(clan))
-
-        # Detailed player if available
-        if player_data.HasField('detailed_player'):
+        # Only add detailedPlayer if it exists and has data
+        if player_data.HasField('detailed_player') and player_data.detailed_player.user_id:
             result["detailedPlayer"] = format_player(player_data.detailed_player)
-
-        # Currencies
-        for currency in player_data.currencies:
-            result["currencies"].append({
-                "currencyType": currency.currency_type,
-                "amount": currency.amount,
-                "maxCapacity": currency.max_capacity,
-                "bonus": currency.bonus
-            })
 
         return jsonify(result)
 
