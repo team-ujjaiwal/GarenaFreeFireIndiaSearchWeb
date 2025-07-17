@@ -13,94 +13,104 @@ app = Flask(__name__)
 # JWT generate URL
 JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
-# Replace these with actual UID/PASSWORD per region
+# Region credentials with unique keys
 CREDENTIALS = {
-    "END": {
+    "IND": {
         "uid": "3959793024",
         "password": "CD265B729E2C2FA1882AD14579BA602738670D69B4438C127C31AE08FB9D7C17",
-        "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName"
+        "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName",
+        "server_code": "IND"
     },
     "SG": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "SG"
     },
     "NA": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": " https://client.us.freefiremobile.com/FuzzySearchAccountByName"
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
+        "server_code": "NA"
     },
     "BR": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
-    }, 
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
+        "server_code": "BR"
+    },
     "SAC": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
-    }, 
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
+        "server_code": "SAC"
+    },
     "US": {
         "uid": "3943737998",
         "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
-        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
-    }, 
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName",
+        "server_code": "US"
+    },
     "ID": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "ID"
     },
     "TW": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "TW"
     },
     "TH": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
-    },
-    "BR": {
-        "uid": "3943739516",
-        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "TH"
     },
     "BD": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "BD"
     },
     "ME": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "ME"
     },
     "RU": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "RU"
     },
     "VN": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "VN"
     },
     "PK": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "PK"
     },
     "CIS": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "CIS"
     },
-    "EROUPE": {
+    "EUROPE": {
         "uid": "3943739516",
         "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
-        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
-    },
-    # Add more servers as needed
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName",
+        "server_code": "EUROPE"
+    }
 }
 
 def get_jwt(uid, password):
@@ -130,11 +140,11 @@ def convert_timestamp(ts):
     except Exception:
         return str(ts)
 
-def format_player(player):
+def format_player(player, requested_region):
     return {
         "account_id": player.accountId,
         "nickname": player.nickname,
-        "region": player.region,
+        "region": requested_region,  # Use the requested region instead of player.region
         "level": player.level,
         "last_login": convert_timestamp(player.lastLogin)
     }
@@ -142,7 +152,7 @@ def format_player(player):
 @app.route('/search', methods=['GET'])
 def search_by_name():
     name = request.args.get('nickname')
-    region = request.args.get('region', 'ind').upper()  # FIXED here 👈
+    region = request.args.get('region', 'IND').upper()
 
     if not name:
         return jsonify({"error": "Missing 'nickname' parameter"}), 400
@@ -178,10 +188,16 @@ def search_by_name():
         players = Players()
         players.ParseFromString(response.content)
 
-        results = [format_player(p) for p in players.player]
+        # Filter players by the requested region (server_code)
+        filtered_players = [
+            p for p in players.player 
+            if p.region.upper() == creds["server_code"]
+        ]
+
+        results = [format_player(p, region) for p in filtered_players]
 
         return jsonify({
-            "region": region.upper(),
+            "region": region,
             "requested_name": name,
             "results": results
         })
