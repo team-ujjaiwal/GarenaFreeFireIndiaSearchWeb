@@ -104,7 +104,7 @@ CREDENTIALS = {
 JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
 # API Key
-API_KEY = "3weekstrylekeysforujjaiwal&darkbhaifan"
+API_KEY = "3weekstrylekeysforujjaiwal7darkbhaifan"
 
 def get_jwt(uid, password):
     try:
