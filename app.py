@@ -5,7 +5,6 @@ from Crypto.Util.Padding import pad
 from data_pb2 import AccountPersonalShowInfo
 import urllib3
 import datetime
-import json
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -199,36 +198,6 @@ def format_player_response(player_info):
             "showRank": player_info.captain_basic_info.show_rank,
             "title": player_info.captain_basic_info.title,
             "weaponSkinShows": list(player_info.captain_basic_info.weapon_skin_shows)
-        },
-        "clanBasicInfo": {
-            "capacity": player_info.clan_basic_info.max_members,
-            "captainId": str(player_info.clan_basic_info.captain_id),
-            "clanId": str(player_info.clan_basic_info.clan_id),
-            "clanLevel": player_info.clan_basic_info.clan_level,
-            "clanName": player_info.clan_basic_info.clan_name,
-            "memberNum": player_info.clan_basic_info.current_members
-        },
-        "diamondCostRes": {
-            "diamondCost": player_info.diamond_cost_res.diamond_cost if player_info.HasField("diamond_cost_res") else 0
-        },
-        "petInfo": {
-            "exp": player_info.pet_info.exp if player_info.HasField("pet_info") else 0,
-            "id": player_info.pet_info.pet_id if player_info.HasField("pet_info") else 0,
-            "isSelected": player_info.pet_info.is_selected if player_info.HasField("pet_info") else False,
-            "level": player_info.pet_info.level if player_info.HasField("pet_info") else 0,
-            "name": player_info.pet_info.pet_name if player_info.HasField("pet_info") else "",
-            "selectedSkillId": player_info.pet_info.selected_skill_id if player_info.HasField("pet_info") else 0,
-            "skinId": player_info.pet_info.skin_id if player_info.HasField("pet_info") else 0
-        },
-        "profileInfo": {
-            "avatarId": player_info.profile_info.avatar_id,
-            "equipedSkills": list(player_info.profile_info.equipped_skills),
-            "pvePrimaryWeapon": player_info.profile_info.pve_primary_weapon
-        },
-        "socialInfo": {
-            "accountId": str(player_info.social_info.account_id),
-            "gender": "Gender_MALE" if player_info.social_info.gender == 2 else "Gender_FEMALE" if player_info.social_info.gender == 1 else "Gender_UNKNOWN",
-            "language": "Language_ARABIC"  # You'll need to map the language enum values
         }
     }
     
@@ -237,7 +206,7 @@ def format_player_response(player_info):
 @app.route('/search', methods=['GET'])
 def search_by_name():
     name = request.args.get('nickname')
-    region = request.args.get('region', 'ind').upper()
+    region = request.args.get('region', 'ind').upper()  # FIXED here 👈
 
     if not name:
         return jsonify({"error": "Missing 'nickname' parameter"}), 400
@@ -270,19 +239,17 @@ def search_by_name():
         return jsonify({"error": f"Request error: {str(e)}"}), 500
 
     if response.status_code == 200 and response.content:
-        try:
-            player_info = AccountPersonalShowInfo()
-            player_info.ParseFromString(response.content)
-            
-            formatted_response = format_player_response(player_info)
-            
-            return jsonify({
-                "region": region.upper(),
-                "requested_name": name,
-                "result": formatted_response
-            })
-        except Exception as e:
-            return jsonify({"error": f"Failed to parse response: {str(e)}"}), 500
+        players = Players()
+        players.ParseFromString(response.content)
+
+        results = [format_player(p) for p in players.player]
+
+        return jsonify({
+            "region": region.upper(),
+            "requested_name": name,
+            "results": results
+        })
+
     else:
         return jsonify({"error": "Failed to fetch data or empty response"}), 500
 
