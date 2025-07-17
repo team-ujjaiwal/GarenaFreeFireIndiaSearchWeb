@@ -20,7 +20,87 @@ CREDENTIALS = {
         "password": "CD265B729E2C2FA1882AD14579BA602738670D69B4438C127C31AE08FB9D7C17",
         "url": "https://client.ind.freefiremobile.com/FuzzySearchAccountByName"
     },
-    # ... (keep your existing credentials)
+    "SG": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "NA": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": " https://client.us.freefiremobile.com/FuzzySearchAccountByName"
+    },
+    "BR": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
+    "SAC": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
+    "US": {
+        "uid": "3943737998",
+        "password": "92EB4C721DB698B17C1BF61F8F7ECDEC55D814FB35ADA778FA5EE1DC0AEAEDFF",
+        "url": "https://client.us.freefiremobile.com/FuzzySearchAccountByName"
+    }, 
+    "ID": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "TW": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "TH": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "BR": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "BD": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "ME": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "RU": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "VN": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "PK": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "CIS": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    "EROUPE": {
+        "uid": "3943739516",
+        "password": "BFA0A0D9DF6D4EE1AA92354746475A429D775BCA4D8DD822ECBC6D0BF7B51886",
+        "url": "https://clientbp.ggblueshark.com/FuzzySearchAccountByName"
+    },
+    # Add more servers as needed
 }
 
 def get_jwt(uid, password):
