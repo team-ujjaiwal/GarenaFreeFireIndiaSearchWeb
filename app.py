@@ -104,7 +104,7 @@ CREDENTIALS = {
 JWT_URL = "https://team-ujjaiwal-jwt.vercel.app/token"
 
 # API Key
-API_KEY = "3weekstrylekeysforujjaiwal7darkbhaifan"
+API_KEY = "1yearskeysforujjaiwal"
 
 def get_jwt(uid, password):
     try:
@@ -215,8 +215,8 @@ def search_by_name():
 
         # Build response with only players
         result = {
-            "Credit": "@Ujjaiwal",
-            "developer": "@DarkBhaiFan",
+            "Credit": "@IndTeamApis",
+            "developer": "@Ujjaiwal",
             "players": [format_player(player) for player in player_data.players]
         }
 
